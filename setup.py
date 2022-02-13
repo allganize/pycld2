@@ -67,9 +67,15 @@ src_files.extend([p.join(BIND_PATH, 'pycldmodule.cc'),
                   p.join(BIND_PATH, 'encodings.cc')])
 include_dirs = [p.join(CLD2_PATH, 'internal'), p.join(CLD2_PATH, 'public')]
 
+compile_args = ["-w", "-O2", "-fPIC"]
+if platform.machine() == 'x86_64':
+    compile_args.append('-m64')
+elif platform.machine() == 'aarch64' or platform.machine() == 'arm64':
+    compile_args.append('-march=armv8-a')
+
 module = Extension('pycld2._pycld2',
                    language='c++',
-                   extra_compile_args=['-w', '-O2', '-m64', '-fPIC'],
+                   extra_compile_args=compile_args,
                    include_dirs=include_dirs,
                    libraries = [],
                    sources=src_files,
